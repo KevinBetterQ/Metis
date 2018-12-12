@@ -1,18 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 """
-Tencent is pleased to support the open source community by making Metis available.
-Copyright (C) 2018 THL A29 Limited, a Tencent company. All rights reserved.
-Licensed under the BSD 3-Clause License (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
-https://opensource.org/licenses/BSD-3-Clause
-Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+对每个输入903个数据点的窗口样本进行检查、划分、正则化
 """
 
 import numpy as np
 
 DEFAULT_WINDOW = 180
 
-
+# 检查输入时间序列窗口是否为 903
 def is_standard_time_series(time_series, window=DEFAULT_WINDOW):
     """
     Check the length of time_series. If window = 180, then the length of time_series should be 903.
@@ -26,7 +22,7 @@ def is_standard_time_series(time_series, window=DEFAULT_WINDOW):
     """
     return bool(len(time_series) == 5 * window + 3 and np.mean(time_series[(4 * window + 2):]) > 0)
 
-
+# 划分 903 的时间数据为 5 部分，[[data_c_left], [data_c_right], [data_b_left], [data_b_right], [data_a]]
 def split_time_series(time_series, window=DEFAULT_WINDOW):
     """
     Spilt the time_series into five parts. Each has a length of window + 1
@@ -49,7 +45,7 @@ def split_time_series(time_series, window=DEFAULT_WINDOW):
     ]
     return split_time_series
 
-
+# 正则化 划分好的五部分时间序列数据
 def normalize_time_series(split_time_series):
     """
     Normalize the split_time_series.
@@ -79,7 +75,7 @@ def normalize_time_series(split_time_series):
     ]
     return normalized_split_time_series
 
-
+# 正则化 划分好的五部分时间序列数据，用最大最小缩放
 def normalize_time_series_by_max_min(split_time_series):
     """
     Normalize the split_time_series by max_min_normalization.
